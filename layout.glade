@@ -69,7 +69,7 @@
       <column type="gchararray"/>
       <!-- column-name Type -->
       <column type="gchararray"/>
-      <!-- column-name Chunk Size -->
+      <!-- column-name Chunk -->
       <column type="gchararray"/>
     </columns>
   </object>
@@ -187,6 +187,8 @@
                     <property name="resizable">True</property>
                     <property name="title" translatable="yes">Path</property>
                     <property name="expand">True</property>
+                    <property name="sort_indicator">True</property>
+                    <property name="sort_column_id">0</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext1"/>
                       <attributes>
@@ -200,6 +202,8 @@
                     <property name="resizable">True</property>
                     <property name="title" translatable="yes">Offset</property>
                     <property name="expand">True</property>
+                    <property name="sort_indicator">True</property>
+                    <property name="sort_column_id">1</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext2"/>
                       <attributes>
