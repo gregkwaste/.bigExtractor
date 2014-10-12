@@ -243,30 +243,40 @@ class AppWindow:
         def_size=struct.unpack('>I',f.read(4))[0]
         #prog.set_pulse_step=round(1/file_count,5)
         #prog.set_pulse_step=1
+        data_list=[] #storing file data
         for i in range(file_count):
-
-            data_off=struct.unpack('>I',f.read(4))[0]
-            data_size=struct.unpack('>I',f.read(4))[0]
+            data=[]
+            data.append(struct.unpack('>2I',f.read(8)))#0
             data_name=read_string(f)
             mps=data_name.split("/")
             #print(mps)
             data_path=''
             for name in mps:
                 data_path+='\\'+name
-            iter=None
-            #getting file header and EASF size
-            temp=f.tell()
-            f.seek(data_off)
+            data.append((mps,data_path))#1
+            #print(data)
+            data_list.append(data)
+        for i in range(file_count): #getting data types
+            f.seek(data_list[i][0][0])
             head=struct.unpack('>I',f.read(4))[0]
             if head==1161909062:
                 head='EASF'
                 chunk_size=struct.unpack('>I',f.read(4))[0]
             else:
                 head='Chunkzip'
-                chunk_size=data_size
+                chunk_size=data_list[i][0][1]
+            data_list[i].append((head,chunk_size))#2
+        for i in range(file_count): #storing in the tree
+            data_off=data_list[i][0][0]
+            data_size=data_list[i][0][1]
+            mps=data_list[i][1][0]
+            data_path=data_list[i][1][1]
+            head=data_list[i][2][0]
+            chunk_size=data_list[i][2][1]
+
+            iter=None
 
             rec_tree(iter,mps,0,(data_off,data_size,data_path,head,hex(chunk_size)),'',tree,hist)
-            f.seek(temp)
             #prog.set_fraction(round(float(i)/float(file_count),2))
             #prog.set_text(str(prog.get_fraction()*float(100))+"%")
             #while gtk.events_pending():
